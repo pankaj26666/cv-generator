@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional CV Generator</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --light-text: #fff;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+        
+        .generator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .output-section {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+        
+        .cv-form {
+            background-color: var(--light-color);
+            padding: 25px;
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="url"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .photo-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .photo-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            display: none;
+        }
+        
+        .upload-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .upload-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .add-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .add-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .remove-btn {
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 12px;
+        }
+        
+        .item-list {
+            margin-top: 10px;
+        }
+        
+        .item {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .generate-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .generate-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .cv-output {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            min-height: 800px;
+        }
+        
+        .cv-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .cv-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+        }
+        
+        .cv-personal {
+            flex: 1;
+        }
+        
+        .cv-name {
+            font-size: 2rem;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+        }
+        
+        .cv-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .cv-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+        
+        .cv-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .cv-item {
+            margin-bottom: 15px;
+        }
+        
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 5px;
+        }
+        
+        .item-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .item-subtitle {
+            font-style: italic;
+            color: #555;
+        }
+        
+        .item-date {
+            color: #777;
+        }
+        
+        .item-description {
+            margin-top: 5px;
+        }
+        
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .skill-tag {
+            background-color: var(--light-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .download-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .download-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        @media (max-width: 768px) {
+            .generator-container {
+                flex-direction: column;
+            }
+            
+            .cv-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .cv-contact {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Professional CV Generator</h1>
+            <p class="subtitle">Create a polished curriculum vitae in minutes</p>
+        </header>
+        
+        <div class="generator-container">
+            <div class="input-section">
+                <form id="cvForm" class="cv-form">
+                    <h2>Personal Information</h2>
+                    
+                    <div class="photo-upload">
+                        <img id="photoPreview" class="photo-preview" alt="Profile Photo">
+                        <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                        <button type="button" class="upload-btn" onclick="document.getElementById('photoUpload').click()">Upload Photo</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="profession">Profession/Title</label>
+                        <input type="text" id="profession" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="linkedin">LinkedIn/Portfolio URL</label>
+                        <input type="url" id="linkedin">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="summary">Professional Summary</label>
+                        <textarea id="summary"></textarea>
+                    </div>
+                    
+                    <h2>Education</h2>
+                    <div id="educationContainer">
+                        <div class="form-group">
+                            <label>Degree 1</label>
+                            <input type="text" class="degree" placeholder="Degree" required>
+                            <input type="text" class="institution" placeholder="Institution" required>
+                            <input type="text" class="education-year" placeholder="Year" required>
+                        </div>
+                    </div>
+                    <button type="button" class="add-btn" onclick="addEducation()">Add Another Education</button>
+                    
+                    <h2>Work Experience</h2>
+                    <div id="experienceContainer">
+                        <div class="form-group">
+                            <label>Job 1</label>
+                            <input type="text" class="job-title" placeholder="Job Title" required>
+                            <input type="text" class="company" placeholder="Company" required>
+                            <input type="text" class="job-dates" placeholder="Dates (e.g., 2018-2020)" required>
+                            <textarea class="job-description" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+                    <button type="button" class="add-btn" onclick="addExperience()">Add Another Job</button>
+                    
+                    <h2>Skills</h2>
+                    <div class="form-group">
+                        <label for="skills">List your skills (comma separated)</label>
+                        <input type="text" id="skills" placeholder="e.g., JavaScript, Project Management, Public Speaking">
+                    </div>
+                    
+                    <h2>Publications</h2>
+                    <div id="publicationsContainer">
+                        <div class="form-group">
+                            <label>Publication 1</label>
+                            <input type="text" class="pub-title" placeholder="Title">
+                            <input type="text" class="pub-journal" placeholder="Journal/Conference">
+                            <input type="text" class="pub-year" placeholder="Year">
+                        </div>
+                    </div>
+                    <button type="button" class="add-btn" onclick="addPublication()">Add Another Publication</button>
+                    
+                    <h2>Additional Information</h2>
+                    <div class="form-group">
+                        <label for="languages">Languages</label>
+                        <input type="text" id="languages" placeholder="e.g., English (Fluent), Spanish (Intermediate)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="certifications">Certifications</label>
+                        <textarea id="certifications" placeholder="List your certifications"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="awards">Awards/Honors</label>
+                        <textarea id="awards" placeholder="List your awards and honors"></textarea>
+                    </div>
+                    
+                    <button type="button" class="generate-btn" onclick="generateCV()">Generate CV</button>
+                </form>
+            </div>
+            
+            <div class="output-section">
+                <div id="cvOutput" class="cv-output">
+                    <div class="cv-header">
+                        <img id="cvPhoto" class="cv-photo" src="https://via.placeholder.com/120" alt="Profile Photo">
+                        <div class="cv-personal">
+                            <h1 class="cv-name">Your Name</h1>
+                            <h2 class="cv-title">Your Profession</h2>
+                            <div class="cv-contact">
+                                <span id="cvEmail">email@example.com</span>
+                                <span id="cvPhone">(123) 456-7890</span>
+                                <span id="cvLinkedin">linkedin.com/in/yourprofile</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cv-section">
+                        <h3 class="section-title">Professional Summary</h3>
+                        <p id="cvSummary">A brief summary of your professional background and key qualifications.</p>
+                    </div>
+                    
+                    <div class="cv-section">
+                        <h3 class="section-title">Education</h3>
+                        <div id="cvEducation">
+                            <div class="cv-item">
+                                <div class="item-header">
+                                    <span class="item-title">Degree Name</span>
+                                    <span class="item-date">Year</span>
+                                </div>
+                                <div class="item-subtitle">Institution Name</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cv-section">
+                        <h3 class="section-title">Work Experience</h3>
+                        <div id="cvExperience">
+                            <div class="cv-item">
+                                <div class="item-header">
+                                    <span class="item-title">Job Title</span>
+                                    <span class="item-date">Dates</span>
+                                </div>
+                                <div class="item-subtitle">Company Name</div>
+                                <div class="item-description">
+                                    <p>Job description and key accomplishments.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cv-section">
+                        <h3 class="section-title">Skills</h3>
+                        <div id="cvSkills" class="skills-list">
+                            <span class="skill-tag">Skill 1</span>
+                            <span class="skill-tag">Skill 2</span>
+                            <span class="skill-tag">Skill 3</span>
+                        </div>
+                    </div>
+                    
+                    <div class="cv-section">
+                        <h3 class="section-title">Publications</h3>
+                        <div id="cvPublications">
+                            <div class="cv-item">
+                                <div class="item-header">
+                                    <span class="item-title">Publication Title</span>
+                                    <span class="item-date">Year</span>
+                                </div>
+                                <div class="item-subtitle">Journal/Conference Name</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cv-section">
+                        <h3 class="section-title">Additional Information</h3>
+                        <div id="cvAdditional">
+                            <div class="cv-item">
+                                <h4 class="item-title">Languages</h4>
+                                <p id="cvLanguages">English, Spanish</p>
+                            </div>
+                            <div class="cv-item">
+                                <h4 class="item-title">Certifications</h4>
+                                <p id="cvCertifications">Certification 1, Certification 2</p>
+                            </div>
+                            <div class="cv-item">
+                                <h4 class="item-title">Awards & Honors</h4>
+                                <p id="cvAwards">Award 1, Award 2</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="download-btn" id="downloadBtn" onclick="downloadCV()">Download CV as PDF</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Photo upload preview
+        document.getElementById('photoUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('photoPreview').src = event.target.result;
+                    document.getElementById('photoPreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Add education field
+        function addEducation() {
+            const container = document.getElementById('educationContainer');
+            const count = container.children.length + 1;
+            
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            div.innerHTML = `
+                <label>Degree ${count}</label>
+                <input type="text" class="degree" placeholder="Degree">
+                <input type="text" class="institution" placeholder="Institution">
+                <input type="text" class="education-year" placeholder="Year">
+                <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Remove</button>
+            `;
+            
+            container.appendChild(div);
+        }
+        
+        // Add experience field
+        function addExperience() {
+            const container = document.getElementById('experienceContainer');
+            const count = container.children.length + 1;
+            
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            div.innerHTML = `
+                <label>Job ${count}</label>
+                <input type="text" class="job-title" placeholder="Job Title">
+                <input type="text" class="company" placeholder="Company">
+                <input type="text" class="job-dates" placeholder="Dates (e.g., 2018-2020)">
+                <textarea class="job-description" placeholder="Description"></textarea>
+                <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Remove</button>
+            `;
+            
+            container.appendChild(div);
+        }
+        
+        // Add publication field
+        function addPublication() {
+            const container = document.getElementById('publicationsContainer');
+            const count = container.children.length + 1;
+            
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            div.innerHTML = `
+                <label>Publication ${count}</label>
+                <input type="text" class="pub-title" placeholder="Title">
+                <input type="text" class="pub-journal" placeholder="Journal/Conference">
+                <input type="text" class="pub-year" placeholder="Year">
+                <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Remove</button>
+            `;
+            
+            container.appendChild(div);
+        }
+        
+        // Generate CV
+        function generateCV() {
+            // Personal Information
+            document.getElementById('cvName').textContent = document.getElementById('fullName').value;
+            document.getElementById('cvTitle').textContent = document.getElementById('profession').value;
+            document.getElementById('cvEmail').textContent = document.getElementById('email').value;
+            document.getElementById('cvPhone').textContent = document.getElementById('phone').value;
+            document.getElementById('cvLinkedin').textContent = document.getElementById('linkedin').value;
+            document.getElementById('cvSummary').textContent = document.getElementById('summary').value;
+            
+            // Photo
+            const photoPreview = document.getElementById('photoPreview');
+            if (photoPreview.style.display === 'block') {
+                document.getElementById('cvPhoto').src = photoPreview.src;
+            }
+            
+            // Education
+            const educationContainer = document.getElementById('educationContainer');
+            const cvEducation = document.getElementById('cvEducation');
+            cvEducation.innerHTML = '';
+            
+            for (let i = 0; i < educationContainer.children.length; i++) {
+                const child = educationContainer.children[i];
+                const degree = child.querySelector('.degree').value;
+                const institution = child.querySelector('.institution').value;
+                const year = child.querySelector('.education-year').value;
+                
+                if (degree && institution && year) {
+                    const div = document.createElement('div');
+                    div.className = 'cv-item';
+                    div.innerHTML = `
+                        <div class="item-header">
+                            <span class="item-title">${degree}</span>
+                            <span class="item-date">${year}</span>
+                        </div>
+                        <div class="item-subtitle">${institution}</div>
+                    `;
+                    cvEducation.appendChild(div);
+                }
+            }
+            
+            // Experience
+            const experienceContainer = document.getElementById('experienceContainer');
+            const cvExperience = document.getElementById('cvExperience');
+            cvExperience.innerHTML = '';
+            
+            for (let i = 0; i < experienceContainer.children.length; i++) {
+                const child = experienceContainer.children[i];
+                const title = child.querySelector('.job-title').value;
+                const company = child.querySelector('.company').value;
+                const dates = child.querySelector('.job-dates').value;
+                const description = child.querySelector('.job-description').value;
+                
+                if (title && company && dates) {
+                    const div = document.createElement('div');
+                    div.className = 'cv-item';
+                    div.innerHTML = `
+                        <div class="item-header">
+                            <span class="item-title">${title}</span>
+                            <span class="item-date">${dates}</span>
+                        </div>
+                        <div class="item-subtitle">${company}</div>
+                        <div class="item-description">
+                            <p>${description.replace(/\n/g, '<br>')}</p>
+                        </div>
+                    `;
+                    cvExperience.appendChild(div);
+                }
+            }
+            
+            // Skills
+            const skills = document.getElementById('skills').value;
+            const cvSkills = document.getElementById('cvSkills');
+            cvSkills.innerHTML = '';
+            
+            if (skills) {
+                skills.split(',').forEach(skill => {
+                    if (skill.trim()) {
+                        const span = document.createElement('span');
+                        span.className = 'skill-tag';
+                        span.textContent = skill.trim();
+                        cvSkills.appendChild(span);
+                    }
+                });
+            }
+            
+            // Publications
+            const publicationsContainer = document.getElementById('publicationsContainer');
+            const cvPublications = document.getElementById('cvPublications');
+            cvPublications.innerHTML = '';
+            
+            for (let i = 0; i < publicationsContainer.children.length; i++) {
+                const child = publicationsContainer.children[i];
+                const title = child.querySelector('.pub-title').value;
+                const journal = child.querySelector('.pub-journal').value;
+                const year = child.querySelector('.pub-year').value;
+                
+                if (title && journal && year) {
+                    const div = document.createElement('div');
+                    div.className = 'cv-item';
+                    div.innerHTML = `
+                        <div class="item-header">
+                            <span class="item-title">${title}</span>
+                            <span class="item-date">${year}</span>
+                        </div>
+                        <div class="item-subtitle">${journal}</div>
+                    `;
+                    cvPublications.appendChild(div);
+                }
+            }
+            
+            // Additional Information
+            document.getElementById('cvLanguages').textContent = document.getElementById('languages').value || 'Not specified';
+            document.getElementById('cvCertifications').textContent = document.getElementById('certifications').value || 'None listed';
+            document.getElementById('cvAwards').textContent = document.getElementById('awards').value || 'None listed';
+            
+            // Scroll to output
+            document.getElementById('cvOutput').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Download as PDF (this would need a proper PDF library in a real implementation)
+        function downloadCV() {
+            alert('In a real implementation, this would generate a PDF using a library like jsPDF or html2pdf.js');
+            // For a real implementation, you would use:
+            // const element = document.getElementById('cvOutput');
+            // html2pdf().from(element).save('my-cv.pdf');
+        }
+    </script>
+</body>
+</html>
